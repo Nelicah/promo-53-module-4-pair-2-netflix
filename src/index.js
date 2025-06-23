@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const mysql = require("mysql2/promise");
 
 // create and config server
 const server = express();
@@ -36,9 +37,40 @@ server.listen(serverPort, () => {
   console.log(`Server listening at http://localhost:${serverPort}`);
 });
 
-server.get("/api/movies", (req, res) => {
+server.get("/api/movies", async (req, res) => {
+  //Conectamos a la bbdd
+  const datosConexion = {
+    host: "localhost",
+    port: "3306",
+    user: "root",
+    password: "candezh",
+    database: "netflix",
+  };
+  const conexion = await mysql.createConnection(datosConexion);
+
+  await conexion.connect();
+
+  //Lanzamos la query
+
+  const datos = await conexion.query(`Select * FROM netflix.movies`);
+
+  // Recuperamos los datos
+
+  const [resultado] = datos;
+
+  //Cerramos la conexión
+  await conexion.end();
+
+  //Dev en el res los datos
+  res.json({
+    success: true,
+    movies: resultado,
+  });
+});
+
+/* server.get("/api/movies", (req, res) => {
   res.json({
     success: true,
     movies: fakeMovies,
   });
-});
+}); */
