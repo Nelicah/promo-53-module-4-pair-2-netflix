@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
+require("dotenv").config();
 
 // create and config server
 const server = express();
@@ -40,12 +41,13 @@ server.listen(serverPort, () => {
 server.get("/api/movies", async (req, res) => {
   //Conectamos a la bbdd
   const datosConexion = {
-    host: "localhost",
-    port: "3306",
-    user: "root",
-    password: "candezh",
-    database: "netflix",
+    host: process.env.MYSQL_HOST,
+    port: process.env.MYSQL_PORT,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
   };
+
   const conexion = await mysql.createConnection(datosConexion);
 
   await conexion.connect();
