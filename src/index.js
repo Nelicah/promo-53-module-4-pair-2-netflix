@@ -39,6 +39,9 @@ server.listen(serverPort, () => {
 });
 
 server.get("/api/movies", async (req, res) => {
+  console.log("Query params:", req.query);
+  const genreFilterParam = req.query.genre;
+  console.log("Género recibido:", genreFilterParam);
   //Conectamos a la bbdd
   const datosConexion = {
     host: process.env.MYSQL_HOST,
